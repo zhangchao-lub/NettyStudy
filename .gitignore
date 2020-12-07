@@ -1,0 +1,45 @@
+.idea
+.settings
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+
+#sc
+cbm-service-new/sc-common/build/
+cbm-service-new/sc-common/sc-common-base/build
+cbm-service-new/sc-common/sc-common-client/build
+cbm-service-new/sc-common/sc-common-log/build
+cbm-service-new/sc-common/sc-common-util/build
+cbm-service-new/sc-common/sc-core/build
+cbm-service-new/sc-api-gateway/build
+
