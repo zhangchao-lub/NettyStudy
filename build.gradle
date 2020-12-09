@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.3.4.RELEASE'
+    id 'org.springframework.boot' version '2.1.13.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
     id 'idea'
@@ -20,9 +20,9 @@ repositories {
 }
 
 dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
     // 该类型的导入传递依赖   
     compile group: 'io.netty', name: 'netty-all', version: '4.1.9.Final'
-
     // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
     // gradle高版本弃用compile
     apiElements 'org.apache.commons:commons-math3:3.6.1'
