@@ -1,4 +1,4 @@
-package netty;
+package netty.s01;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -8,10 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ReferenceCountUtil;
-import io.netty.util.concurrent.EventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author czhang@mindpointeye.com
@@ -32,29 +29,28 @@ public class Client {
                     b.group(group)
                             .channel(NioSocketChannel.class)
                             //方法一:
-//                    .handler(new ChannelInitializer<SocketChannel>() {
-//                        @Override
-//                        protected void initChannel(SocketChannel ch) throws Exception {
-//                            //TODO
-//                        }
-//                    })
+//                            .handler(new ChannelInitializer<SocketChannel>() {
+//                                @Override
+//                                protected void initChannel(SocketChannel ch) throws Exception {
+//                                    //TODO
+//                                }
+//                            })
                             //方法二:自定义handler
                             .handler(new ClientChannelInitializer())
-                            .connect("localhost", 8888);
-//                    .addListener(null)
-//                    .sync();
-            //连接监听器
-            f.addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        log.info("connected");
-                    } else {
-                        log.error("not connected");
-                    }
-                }
-            });
-            f.sync();
+                            .connect("localhost", 8888)
+                            //连接监听器
+                            .addListener(new ChannelFutureListener() {
+                                @Override
+                                public void operationComplete(ChannelFuture future) throws Exception {
+                                    if (future.isSuccess()) {
+                                        log.info("connected");
+                                    } else {
+                                        log.error("not connected");
+                                    }
+                                }
+                            })
+                            .sync();
+
             f.channel().closeFuture().sync();//close()->ChannelFuture
             log.info("client connect stopped");
         } catch (InterruptedException e) {
@@ -80,7 +76,7 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
             int oldCount = 0;
             try {
                 buf = (ByteBuf) msg;
-                oldCount=buf.refCnt();
+                oldCount = buf.refCnt();
                 log.info(String.valueOf(buf));
                 log.info(String.valueOf(buf.refCnt()));
                 byte[] bytes = new byte[buf.readableBytes()];
@@ -90,7 +86,7 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (buf != null && oldCount==0) {
+                if (buf != null && oldCount == 0) {
                     ReferenceCountUtil.release(buf);
                     log.info(String.valueOf(buf.refCnt()));
                 }
