@@ -1,0 +1,3 @@
+Server的异常处理
+1.删除clients里面保存的channel
+2.关闭ctx
