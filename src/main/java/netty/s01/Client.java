@@ -69,35 +69,36 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
         ch.pipeline().addLast(new ChildHandler());
     }
 
-    private class ChildHandler extends ChannelInboundHandlerAdapter {
-        @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            ByteBuf buf = null;
-            int oldCount = 0;
-            try {
-                buf = (ByteBuf) msg;
-                oldCount = buf.refCnt();
-                log.info(String.valueOf(buf));
-                log.info(String.valueOf(buf.refCnt()));
-                byte[] bytes = new byte[buf.readableBytes()];
-                buf.getBytes(buf.readerIndex(), bytes);
-                log.info(new String(bytes));
+}
+@Slf4j
+class ChildHandler extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ByteBuf buf = null;
+        int oldCount = 0;
+        try {
+            buf = (ByteBuf) msg;
+            oldCount = buf.refCnt();
+            log.info(String.valueOf(buf));
+            log.info(String.valueOf(buf.refCnt()));
+            byte[] bytes = new byte[buf.readableBytes()];
+            buf.getBytes(buf.readerIndex(), bytes);
+            log.info(new String(bytes));
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (buf != null && oldCount == 0) {
-                    ReferenceCountUtil.release(buf);
-                    log.info(String.valueOf(buf.refCnt()));
-                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (buf != null && oldCount == 0) {
+                ReferenceCountUtil.release(buf);
+                log.info(String.valueOf(buf.refCnt()));
             }
         }
+    }
 
-        @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            //channel 第一次连上可用 ，写出一个字符串Direct Memory
-            ByteBuf buf = Unpooled.copiedBuffer("Hello".getBytes());
-            ctx.writeAndFlush(buf);
-        }
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        //channel 第一次连上可用 ，写出一个字符串Direct Memory
+        ByteBuf buf = Unpooled.copiedBuffer("Hello".getBytes());
+        ctx.writeAndFlush(buf);
     }
 }

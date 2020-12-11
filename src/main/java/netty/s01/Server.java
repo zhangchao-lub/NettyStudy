@@ -49,7 +49,7 @@ public class Server {
             log.info("我的Netty开始服务");
             //关闭程序
             f.channel().closeFuture().sync();//close()->ChannelFuture
-            log.info("client connect stopped");
+            log.info("server stopped");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
