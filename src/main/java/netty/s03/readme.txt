@@ -1,0 +1,1 @@
+窗口显示完毕之后调用 new Client.connect()
