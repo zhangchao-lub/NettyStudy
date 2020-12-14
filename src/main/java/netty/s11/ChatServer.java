@@ -23,7 +23,7 @@ public class ChatServer {
     //管道组
     public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    public  void serverStart() {
+    public void serverStart() {
         //线程池
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workGroup = new NioEventLoopGroup(2);
@@ -45,11 +45,12 @@ public class ChatServer {
                     .bind(8888)
                     .sync();
             log.info("聊天室启动");
+            ServerFrame.getInstance().updateServerMsg("server started");
             f.channel().closeFuture().sync();//close()->ChannelFuture
         } catch (
                 InterruptedException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             workGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
@@ -65,27 +66,27 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf= null;
-        int oldCount=0;
-        try{
+        ByteBuf buf = null;
+        int oldCount = 0;
+        try {
             buf = (ByteBuf) msg;
 
             byte[] bytes = new byte[buf.readableBytes()];
             buf.getBytes(buf.readerIndex(), bytes);
-            String s=new String(bytes);
+            String s = new String(bytes);
             log.info(s);
 
-            if("_bye_".equals(s)){
+            if ("_bye_".equals(s)) {
                 log.info("client exit now");
                 Server.clients.remove(ctx.channel());
                 ctx.close();
             }
 
             ChatServer.clients.writeAndFlush(buf);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if(buf !=null &&oldCount==0){
+        } finally {
+            if (buf != null && oldCount == 0) {
 //                ReferenceCountUtil.release(buf);
             }
         }
